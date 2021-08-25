@@ -1,0 +1,13 @@
+{
+  "name": "StreamSourceWithTransformation",
+  "config": {
+    "name": "StreamSourceWithTransformation",
+    "connector.class": "org.apache.kafka.connect.file.FileStreamSourceConnector",
+    "tasks.max": "1",
+    "transforms": "MakeMap, InsertSource",
+    "transforms.MakeMap.type": "org.apache.kafka.connect.transforms.HoistField$Value",
+    "transforms.InsertSource.type": "org.apache.kafka.connect.transforms.InsertField$Value",
+    "file": "/input/input.txt",
+    "topic": "connector-transform"
+  }
+}

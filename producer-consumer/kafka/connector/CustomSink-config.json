@@ -1,0 +1,10 @@
+{
+  "name": "CustomSink",
+  "config": {
+    "name": "CustomSink",
+    "connector.class": "org.apache.kafka.connect.file.FileStreamSinkConnector",
+    "tasks.max": "1",
+    "topics": "custom-connector-topic",
+    "file": "/input/output.txt"
+  }
+}
