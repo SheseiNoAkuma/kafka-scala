@@ -22,7 +22,7 @@ object Main extends App {
 
   props.setProperty(ProducerConfig.RETRIES_CONFIG, "3")
   props.setProperty(ProducerConfig.LINGER_MS_CONFIG, "1")
-  // leverage idempotent producer from Kafka 0.11 !
+  // leverage idempotent producer from Kafka
   props.setProperty(ProducerConfig.ENABLE_IDEMPOTENCE_CONFIG, "true") // ensure we don't push duplicates
 
   logger.info("Producer starting")
@@ -36,7 +36,12 @@ object Main extends App {
   private val records: IndexedSeq[Future[RecordMetadata]] = for (i <- 0 to 10000) yield {
     val inputData = InputData.randomData()
     logger.info(s"$i - value: $inputData")
-    val eventualMetadata = Future { producer.send(new ProducerRecord[String, String](topic, inputData.name, inputData.toJson)).get() }
+    val eventualMetadata = Future { producer.send(new ProducerRecord[String, String](topic, inputData.name, inputData.toJson), (meta: RecordMetadata, e: Exception) =>
+      if (e == null)
+        logger.info(s"sent message $meta")
+      else
+        logger.warn(s"an exception occurred", e)
+    ).get() }
     Thread.sleep(1000)
     eventualMetadata
   }

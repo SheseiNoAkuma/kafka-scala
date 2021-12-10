@@ -12,7 +12,7 @@ lazy val dependenciesSettings = Seq(
 
 lazy val root = (project in file("."))
   .settings(
-    name := "scala-kafka-poc",
+    name := "producer-consumer",
     organization := "eu.github.micro",
     version := "0.1"
   )
@@ -21,3 +21,6 @@ lazy val root = (project in file("."))
   .settings(dependenciesSettings: _*)
 
 idePackagePrefix := Some("eu.micro.kafka")
+
+//note to generate code run sbt avroScalaGenerate (see https://github.com/julianpeeters/sbt-avrohugger)
+//the code will be generated in producer-consumer/target/scala-2.13/src_managed/main/compiled_avro

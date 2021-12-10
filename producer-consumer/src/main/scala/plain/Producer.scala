@@ -33,7 +33,12 @@ object Producer extends App {
     } yield new ProducerRecord[String, String](topic, s"${messageKey.keyRoot}-${random.nextInt()}", s"value-${random.nextInt()}")
 
     //send and aggregate all eventual RecordMetadata in a single future
-    val eventualMessage = Future.traverse(messages)(message => Future { producer.send(message).get() })
+    val eventualMessage = Future.traverse(messages)(message => Future { producer.send(message, (meta: RecordMetadata, e: Exception) =>
+      if (e == null)
+        logger.info(s"sent message $meta")
+      else
+        logger.warn(s"an exception occurred", e)
+    ).get() })
 
     eventualMessage.onComplete(_ => producer.close())
     eventualMessage
